@@ -1,0 +1,19 @@
+name: Build luci-sso
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build packages
+        run: make package SDK_ARCH=arm_cortex-a9
+      - name: Collect packages
+        run: |
+          mkdir -p out
+          find . \( -name '*.apk' -o -name '*.ipk' \) -exec cp {} out/ \;
+          ls -l out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: luci-sso-arm_cortex-a9
+          path: out/
